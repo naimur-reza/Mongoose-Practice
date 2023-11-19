@@ -16,15 +16,28 @@ const guardianSchema = new Schema<Guardian>({
 
 const studentSchema = new Schema<Student>({
   studentId: { type: String, required: true },
-  name: usernameSchema,
+  name: {
+    type: usernameSchema,
+    required: true,
+  },
   age: { type: Number, required: true },
   avatar: { type: String, required: true },
-  bloodGroup: ['A+', 'A-', 'AB+', 'AB-', 'B+', 'B-', 'O+', 'O-'],
+  bloodGroup: {
+    type: String,
+    enum: ['A+', 'A-', 'AB+', 'AB-', 'B+', 'B-', 'O+', 'O-'],
+  },
   email: { type: String, required: true },
   number: { type: String, required: true },
   familyMember: { type: Number, required: true },
-  guardian: guardianSchema,
-  status: ['ACTIVE', 'INACTIVE'],
+  guardian: {
+    type: guardianSchema,
+    required: true,
+  },
+  status: {
+    type: String,
+    enum: ['ACTIVE', 'INACTIVE'],
+    default: 'ACTIVE',
+  },
 });
 
 export const StudentModel = model<Student>('Student', studentSchema);
