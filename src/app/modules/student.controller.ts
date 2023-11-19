@@ -27,7 +27,7 @@ const getAllStudents = async (req: Request, res: Response) => {
 const getSingleStudent = async (req: Request, res: Response) => {
   try {
     const id = req.params.id;
-    const data = StudentServices.getSingleStudentFromDB(id);
+    const data = await StudentServices.getSingleStudentFromDB(id);
     return res.status(200).send(data);
   } catch (error) {
     console.log(error);
