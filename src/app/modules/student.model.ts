@@ -15,7 +15,7 @@ const guardianSchema = new Schema<Guardian>({
 });
 
 const studentSchema = new Schema<Student>({
-  studentId: { type: String, required: true },
+  studentId: { type: String, required: true, unique: true },
   name: {
     type: usernameSchema,
     required: true,
