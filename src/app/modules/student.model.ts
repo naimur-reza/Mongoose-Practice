@@ -1,21 +1,21 @@
-import { Schema, model } from 'mongoose'
-import { Guardian, Student, Username } from './student.interface'
+import { Schema, model } from 'mongoose';
+import { Guardian, Student, Username } from './student.interface';
 
 const usernameSchema = new Schema<Username>({
   firstName: { type: String, required: true },
   middleName: { type: String },
   lastName: { type: String, required: true },
-})
+});
 
 const guardianSchema = new Schema<Guardian>({
   fatherName: { type: String, required: true },
   motherName: { type: String, required: true },
   fatherPassion: { type: String, required: true },
   motherPassion: { type: String, required: true },
-})
+});
 
 const studentSchema = new Schema<Student>({
-  id: { type: String, required: true },
+  studentId: { type: String, required: true },
   name: usernameSchema,
   age: { type: Number, required: true },
   avatar: { type: String, required: true },
@@ -25,6 +25,6 @@ const studentSchema = new Schema<Student>({
   familyMember: { type: Number, required: true },
   guardian: guardianSchema,
   status: ['ACTIVE', 'INACTIVE'],
-})
+});
 
-export const StudentModel = model<Student>('Student', studentSchema)
+export const StudentModel = model<Student>('Student', studentSchema);

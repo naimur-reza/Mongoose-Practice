@@ -1,14 +1,14 @@
 export interface Username {
-  firstName: string
-  middleName: string
-  lastName: string
+  firstName: string;
+  middleName: string;
+  lastName: string;
 }
 
 export interface Guardian {
-  fatherName: string
-  motherName: string
-  fatherPassion: string
-  motherPassion: string
+  fatherName: string;
+  motherName: string;
+  fatherPassion: string;
+  motherPassion: string;
 }
 
 enum BloodGroup {
@@ -23,14 +23,14 @@ enum BloodGroup {
 }
 
 export interface Student {
-  id: string
-  name: Username
-  age: number
-  email: string
-  number: string
-  bloodGroup?: BloodGroup
-  guardian: Guardian
-  familyMember: number
-  avatar?: string
-  status: 'ACTIVE' | 'INACTIVE'
+  studentId: string;
+  name: Username;
+  age: number;
+  email: string;
+  number: string;
+  bloodGroup?: BloodGroup;
+  guardian: Guardian;
+  familyMember: number;
+  avatar?: string;
+  status: 'ACTIVE' | 'INACTIVE';
 }
