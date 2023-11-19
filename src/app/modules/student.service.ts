@@ -1,5 +1,5 @@
-import { Student } from './student.interface';
-import { StudentModel } from './student.model';
+import { Student } from "./student.interface";
+import { StudentModel } from "./student.model";
 
 const createStudentInDb = async (student: Student) => {
   const res = await StudentModel.create(student);
