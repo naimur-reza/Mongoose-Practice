@@ -1,6 +1,6 @@
 export interface Username {
   firstName: string;
-  middleName: string;
+  middleName?: string;
   lastName: string;
 }
 
@@ -11,26 +11,15 @@ export interface Guardian {
   motherPassion: string;
 }
 
-enum BloodGroup {
-  'A+',
-  'A-',
-  'B+',
-  'B-',
-  'AB+',
-  'AB-',
-  'O+',
-  'O-',
-}
-
 export interface Student {
   studentId: string;
   name: Username;
   age: number;
   email: string;
   number: string;
-  bloodGroup?: BloodGroup;
+  bloodGroup?: "A+" | "A-" | "AB+" | "AB-" | "B+" | "B-" | "O+" | "O-";
   guardian: Guardian;
   familyMember: number;
   avatar?: string;
-  status: 'ACTIVE' | 'INACTIVE';
+  status: "ACTIVE" | "INACTIVE";
 }

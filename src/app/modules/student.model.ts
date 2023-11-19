@@ -1,5 +1,5 @@
-import { Schema, model } from 'mongoose';
-import { Guardian, Student, Username } from './student.interface';
+import { Schema, model } from "mongoose";
+import { Guardian, Student, Username } from "./student.interface";
 
 const usernameSchema = new Schema<Username>({
   firstName: { type: String, required: true },
@@ -24,7 +24,7 @@ const studentSchema = new Schema<Student>({
   avatar: { type: String, required: true },
   bloodGroup: {
     type: String,
-    enum: ['A+', 'A-', 'AB+', 'AB-', 'B+', 'B-', 'O+', 'O-'],
+    enum: ["A+", "A-", "AB+", "AB-", "B+", "B-", "O+", "O-"],
   },
   email: { type: String, required: true },
   number: { type: String, required: true },
@@ -35,9 +35,9 @@ const studentSchema = new Schema<Student>({
   },
   status: {
     type: String,
-    enum: ['ACTIVE', 'INACTIVE'],
-    default: 'ACTIVE',
+    enum: ["ACTIVE", "INACTIVE"],
+    default: "ACTIVE",
   },
 });
 
-export const StudentModel = model<Student>('Student', studentSchema);
+export const StudentModel = model<Student>("Student", studentSchema);

@@ -1,17 +1,25 @@
-import { Request, Response } from 'express';
-import { StudentServices } from './student.service';
+import { Request, Response } from "express";
+import { StudentServices } from "./student.service";
+import { studentValidationSchema } from "./student.validation";
 
 const createStudent = async (req: Request, res: Response) => {
   try {
     const student = req.body;
-    await StudentServices.createStudentInDb(student);
 
-    return res.status(200).json({
+    const zodParseData = studentValidationSchema.parse(student);
+
+    await StudentServices.createStudentInDb(zodParseData);
+
+    res.status(200).json({
       success: true,
-      message: 'Student info inserted successfully',
+      message: "Student info inserted successfully",
     });
   } catch (error) {
-    console.log(error);
+    res.status(500).json({
+      success: false,
+      message: "Something went wrong!",
+      error: error,
+    });
   }
 };
 
