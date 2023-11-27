@@ -1,6 +1,8 @@
 import { NextFunction, Request, Response } from "express";
 import { StudentServices } from "./student.service";
 import { studentValidationSchema } from "./student.validation";
+import sendResponse from "../utils/sendResponse";
+import httpStatus from "http-status";
 
 const createStudent = async (
   req: Request,
@@ -14,9 +16,11 @@ const createStudent = async (
 
     await StudentServices.createStudentInDb(zodParseData);
 
-    res.status(200).json({
+    sendResponse(res, {
       success: true,
       message: "Student info inserted successfully",
+      data: res,
+      statusCode: httpStatus.OK,
     });
   } catch (error) {
     console.error("Error in createStudent:", error);
