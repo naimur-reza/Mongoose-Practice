@@ -1,8 +1,12 @@
-import { Request, Response } from "express";
+import { NextFunction, Request, Response } from "express";
 import { StudentServices } from "./student.service";
 import { studentValidationSchema } from "./student.validation";
 
-const createStudent = async (req: Request, res: Response) => {
+const createStudent = async (
+  req: Request,
+  res: Response,
+  next: NextFunction,
+) => {
   try {
     const student = req.body;
 
@@ -15,30 +19,34 @@ const createStudent = async (req: Request, res: Response) => {
       message: "Student info inserted successfully",
     });
   } catch (error) {
-    res.status(500).json({
-      success: false,
-      message: "Something went wrong!",
-      error: error,
-    });
+    next(error);
   }
 };
 
-const getAllStudents = async (req: Request, res: Response) => {
+const getAllStudents = async (
+  req: Request,
+  res: Response,
+  next: NextFunction,
+) => {
   try {
     const data = await StudentServices.getStudents();
     return res.status(200).send(data);
   } catch (error) {
-    console.log(error);
+    next(error);
   }
 };
 
-const getSingleStudent = async (req: Request, res: Response) => {
+const getSingleStudent = async (
+  req: Request,
+  res: Response,
+  next: NextFunction,
+) => {
   try {
     const id = req.params.id;
     const data = await StudentServices.getSingleStudentFromDB(id);
     return res.status(200).send(data);
   } catch (error) {
-    console.log(error);
+    next(error);
   }
 };
 
