@@ -19,6 +19,7 @@ const createStudent = async (
       message: "Student info inserted successfully",
     });
   } catch (error) {
+    console.error("Error in createStudent:", error);
     next(error);
   }
 };
@@ -32,6 +33,7 @@ const getAllStudents = async (
     const data = await StudentServices.getStudents();
     return res.status(200).send(data);
   } catch (error) {
+    console.error("Error in getAllStudents:", error);
     next(error);
   }
 };
@@ -46,6 +48,7 @@ const getSingleStudent = async (
     const data = await StudentServices.getSingleStudentFromDB(id);
     return res.status(200).send(data);
   } catch (error) {
+    console.error("Error in getSingleStudent:", error);
     next(error);
   }
 };

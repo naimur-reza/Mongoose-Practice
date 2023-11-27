@@ -1,7 +1,7 @@
 /* eslint-disable no-unused-vars */
 import { NextFunction, Request, Response } from "express";
-
-const globalErrorHandler = (
+import httpStatus from "http-status";
+const notFound = (
   // eslint-disable-next-line @typescript-eslint/no-explicit-any
   err: any,
   req: Request,
@@ -9,11 +9,10 @@ const globalErrorHandler = (
   // eslint-disable-next-line @typescript-eslint/no-unused-vars
   next: NextFunction,
 ) => {
-  const message = err.message || "Something went wrong!";
-  return res.status(500).send({
+  return res.status(httpStatus.NOT_FOUND).json({
     success: false,
-    message: message,
+    message: "Api not found!",
   });
 };
 
-export default globalErrorHandler;
+export default notFound;
