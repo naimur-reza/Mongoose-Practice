@@ -9,7 +9,7 @@ const notFound = (
   // eslint-disable-next-line @typescript-eslint/no-unused-vars
   next: NextFunction,
 ) => {
-  return res.status(httpStatus.NOT_FOUND).json({
+  res.status(httpStatus.NOT_FOUND).json({
     success: false,
     message: "Api not found!",
   });

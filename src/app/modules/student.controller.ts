@@ -1,21 +1,16 @@
-import { NextFunction, Request, RequestHandler, Response } from "express";
+import { RequestHandler } from "express";
 import { StudentServices } from "./student.service";
-import { studentValidationSchema } from "./student.validation";
+
 import sendResponse from "../utils/sendResponse";
 import httpStatus from "http-status";
-
-const catchAsync = (fn: RequestHandler) => {
-  return (req: Request, res: Response, next: NextFunction) => {
-    Promise.resolve(fn(req, res, next)).catch(err => next(err));
-  };
-};
+import { catchAsync } from "../utils/catchAsync";
 
 const createStudent: RequestHandler = catchAsync(async (req, res, next) => {
   const student = req.body;
 
-  const zodParseData = studentValidationSchema.parse(student);
+  // const zodParseData = studentValidationSchema.parse(student);
 
-  await StudentServices.createStudentInDb(zodParseData);
+  await StudentServices.createStudentInDb(student);
 
   sendResponse(res, {
     success: true,

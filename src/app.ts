@@ -19,5 +19,5 @@ app.use("/api/v1/", router);
 
 // global error handler middleware
 
-app.use(notFound);
 app.use(globalErrorHandler);
+app.use(notFound);
