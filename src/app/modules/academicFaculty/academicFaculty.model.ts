@@ -6,6 +6,7 @@ const academicFacultySchema = new Schema<TAcademicFaculty>(
     name: {
       type: String,
       required: true,
+      unique: true,
     },
   },
   {
@@ -14,6 +15,6 @@ const academicFacultySchema = new Schema<TAcademicFaculty>(
 );
 
 export const AcademicFaculty = model<TAcademicFaculty>(
-  'User',
+  'AcademicFaculty',
   academicFacultySchema,
 );

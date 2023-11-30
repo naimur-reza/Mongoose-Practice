@@ -28,7 +28,7 @@ const getAllFaculties: RequestHandler = catchAsync(async (req, res) => {
 });
 
 const createAcademicFaculty = catchAsync(async (req, res) => {
-  const { data } = req.body;
+  const data = req.body;
   const result = await FacultiesServices.createAcademicFacultyIntoDB(data);
 
   sendResponse(res, {
