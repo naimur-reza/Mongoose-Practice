@@ -40,13 +40,13 @@ const createAcademicFaculty = catchAsync(async (req, res) => {
 });
 const updateAcademicFaculty = catchAsync(async (req, res) => {
   const id = req.params.facultyId;
-  const { data } = req.body;
+  const data = req.body;
   const result = await FacultiesServices.updateAcademicFaculty(id, data);
 
   sendResponse(res, {
     statusCode: httpStatus.OK,
     success: true,
-    message: 'Faculty is created successfully',
+    message: 'Faculty is updated successfully',
     data: result,
   });
 });

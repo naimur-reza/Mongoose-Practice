@@ -12,12 +12,15 @@ const getAllFacultiesFromDB = async () => {
 };
 
 const getSingleFacultyFromDB = async (id: string) => {
-  const result = await AcademicFaculty.aggregate([{ $match: { id } }]);
+  const result = await AcademicFaculty.findById(id);
   return result;
 };
 
 const updateAcademicFaculty = async (id: string, data: TAcademicFaculty) => {
-  const res = AcademicFaculty.findByIdAndUpdate({ id }, { data });
+  const res = await AcademicFaculty.findByIdAndUpdate({ _id: id }, data, {
+    new: true,
+    runValidators: true,
+  });
   return res;
 };
 
