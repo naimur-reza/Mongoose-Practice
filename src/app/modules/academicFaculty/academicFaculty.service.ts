@@ -16,8 +16,14 @@ const getSingleFacultyFromDB = async (id: string) => {
   return result;
 };
 
+const updateAcademicFaculty = async (id: string, data: TAcademicFaculty) => {
+  const res = AcademicFaculty.findByIdAndUpdate({ id }, { data });
+  return res;
+};
+
 export const FacultiesServices = {
   createAcademicFacultyIntoDB,
   getAllFacultiesFromDB,
   getSingleFacultyFromDB,
+  updateAcademicFaculty,
 };
