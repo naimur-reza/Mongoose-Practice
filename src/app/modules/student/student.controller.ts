@@ -5,13 +5,13 @@ import sendResponse from '../../utils/sendResponse';
 import { StudentServices } from './student.service';
 
 const getSingleStudent = catchAsync(async (req, res) => {
-  const { studentId } = req.params;
-  const result = await StudentServices.getSingleStudentFromDB(studentId);
+  const { semesterId } = req.params;
+  const result = await StudentServices.getSingleStudentFromDB(semesterId);
 
   sendResponse(res, {
     statusCode: httpStatus.OK,
     success: true,
-    message: 'Student is retrieved succesfully',
+    message: 'Student is retrieved successfully!',
     data: result,
   });
 });
@@ -22,7 +22,7 @@ const getAllStudents: RequestHandler = catchAsync(async (req, res) => {
   sendResponse(res, {
     statusCode: httpStatus.OK,
     success: true,
-    message: 'Student are retrieved succesfully',
+    message: 'Students are retrieved successfully!',
     data: result,
   });
 });
@@ -34,7 +34,7 @@ const deleteStudent = catchAsync(async (req, res) => {
   sendResponse(res, {
     statusCode: httpStatus.OK,
     success: true,
-    message: 'Student is deleted succesfully',
+    message: 'Student is deleted successfully!',
     data: result,
   });
 });
