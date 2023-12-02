@@ -4,6 +4,7 @@ import { AppError } from '../../errors/AppError';
 import httpStatus from 'http-status';
 import { TStudent } from './student.interface';
 import { updateStudentValidationSchema } from './student.validation';
+import { User } from '../user/user.model';
 const getAllStudentsFromDB = async () => {
   const result = await Student.find()
     .populate('admissionSemester')
@@ -28,11 +29,12 @@ const getSingleStudentFromDB = async (id: string) => {
   return result;
 };
 
+// todo: Problem with session
 const deleteStudentFromDB = async (id: string) => {
   const session = await mongoose.startSession();
 
   try {
-    const deletedStudent = await Student.updateOne(
+    const deletedStudent = await Student.findOneAndUpdate(
       { id },
       { isDeleted: true },
       { new: true, session },
@@ -40,6 +42,15 @@ const deleteStudentFromDB = async (id: string) => {
 
     if (!deletedStudent)
       throw new AppError(httpStatus.BAD_REQUEST, 'Failed to delete student!');
+
+    const deletedUser = await User.findOneAndUpdate(
+      { id },
+      { isDeleted: true },
+      { new: true, session },
+    );
+
+    if (!deletedUser)
+      throw new AppError(httpStatus.BAD_REQUEST, 'Failed to delete user!');
 
     await session.commitTransaction();
     session.endSession();
