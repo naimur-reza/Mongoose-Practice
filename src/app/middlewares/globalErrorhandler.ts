@@ -6,6 +6,7 @@ import { NextFunction, Request, Response } from 'express';
 import { ZodError, number, string } from 'zod';
 import { TErrorSource } from '../interfaces/error';
 import config from '../config';
+import handleZodError from '../errors/handleZodError';
 
 const globalErrorHandler = (
   err: any,
@@ -13,32 +14,15 @@ const globalErrorHandler = (
   res: Response,
   next: NextFunction,
 ) => {
+  // default errors when find no custom erros
   let statusCode = err.statusCode || 500;
   let message = err.message || 'Something went wrong!';
-
   let errorSources: TErrorSource = [
     {
       path: '',
       message: 'Something went wrong!',
     },
   ];
-
-  const handleZodError = (err: ZodError) => {
-    const errorSources: TErrorSource = err.issues.map((issue) => {
-      return {
-        path: issue.path[issue.path.length - 1],
-        message: issue.message,
-      };
-    });
-
-    const statusCode = 400;
-    return {
-      statusCode,
-      message: 'Validation error',
-      success: false,
-      errorSources,
-    };
-  };
 
   if (err instanceof ZodError) {
     const simplifiedError = handleZodError(err);
