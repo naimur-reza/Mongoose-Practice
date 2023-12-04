@@ -1,3 +1,4 @@
+/* eslint-disable @typescript-eslint/no-explicit-any */
 import mongoose from 'mongoose';
 import config from '../../config';
 import { TStudent } from '../student/student.interface';
@@ -24,40 +25,35 @@ const createStudentIntoDB = async (password: string, payload: TStudent) => {
     payload.admissionSemester,
   );
 
-  // const session = await mongoose.startSession();
+  const session = await mongoose.startSession();
   try {
-    // session.startTransaction();
+    session.startTransaction();
 
     //set  generated id
     userData.id = await generateStudentId(admissionSemester!);
 
     // create a user
-    // const newUser = await User.create([userData], { session });
-    const newUser = await User.create(userData);
+    const newUser = await User.create([userData], { session });
 
-    // if (!newUser.length) {
-    //   throw new AppError(httpStatus.BAD_REQUEST, 'Failed to create user!');
-    // }
+    if (!newUser.length) {
+      throw new AppError(httpStatus.BAD_REQUEST, 'Failed to create user!');
+    }
 
-    payload.id = newUser.id;
-    payload.user = newUser._id; //reference _id
-    // payload.id = newUser[0].id;
-    // payload.user = newUser[0]._id; //reference _id
+    //reference _id
+    payload.id = newUser[0].id;
+    payload.user = newUser[0]._id; //reference _id
 
-    const newStudent = await Student.create(payload);
-
-    // const newStudent = await Student.create([payload], { session });
-    // if (!newStudent.length) {
-    //   throw new AppError(httpStatus.BAD_REQUEST, 'Failed to create student!');
-    // }
-    // await session.commitTransaction();
-    // session.endSession();
+    const newStudent = await Student.create([payload], { session });
+    if (!newStudent.length) {
+      throw new AppError(httpStatus.BAD_REQUEST, 'Failed to create student!');
+    }
+    await session.commitTransaction();
+    session.endSession();
     return newStudent;
-  } catch (error) {
-    // await session.abortTransaction();
-    // session.endSession();
-
-    throw new Error('Failed to create student');
+  } catch (error: any) {
+    await session.abortTransaction();
+    session.endSession();
+    throw new Error(error);
   }
 };
 
