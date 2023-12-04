@@ -5,23 +5,33 @@ import httpStatus from 'http-status';
 import { TStudent } from './student.interface';
 import { updateStudentValidationSchema } from './student.validation';
 import { User } from '../user/user.model';
+import QueryBuilder from '../../builder/queryBuilder';
 const getAllStudentsFromDB = async (query: Record<string, unknown>) => {
-  const searchTerm = query.searchTerm || '';
+  const studentSearchableFields = [
+    'email',
+    'name.firstName',
+    'presentAddress',
+    'gender',
+  ];
 
-  const result = await Student.find({
-    $or: ['email', 'name.firstName', 'presentAddress', 'gender'].map(
-      (field) => ({
-        [field]: { $regex: searchTerm, $options: 'i' },
+  const studentQuery = new QueryBuilder(
+    Student.find()
+      .populate('admissionSemester')
+      .populate({
+        path: 'academicDepartment',
+        populate: {
+          path: 'academicFaculty',
+        },
       }),
-    ),
-  })
-    .populate('admissionSemester')
-    .populate({
-      path: 'academicDepartment',
-      populate: {
-        path: 'academicFaculty',
-      },
-    });
+    query,
+  )
+    .search(studentSearchableFields)
+    .filter()
+    .sort()
+    .paginate()
+    .fields();
+
+  const result = await studentQuery.modelQuery;
   return result;
 };
 
