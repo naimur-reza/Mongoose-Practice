@@ -9,6 +9,13 @@ import config from '../config';
 import handleZodError from '../errors/handleZodError';
 import handleValidationError from '../errors/handleValidationError';
 
+interface GlobalErrorHandler {
+  success: boolean;
+  message: string;
+  errorSources: TErrorSource;
+  stack?: any;
+}
+
 const globalErrorHandler = (
   err: any,
   req: Request,
@@ -31,6 +38,11 @@ const globalErrorHandler = (
     message = simplifiedError.message;
     errorSources = simplifiedError.errorSources;
   } else if (err.name === 'ValidationError') {
+    const simplifiedError = handleValidationError(err);
+    statusCode = simplifiedError.statusCode;
+    message = simplifiedError.message;
+    errorSources = simplifiedError.errorSources;
+  } else if (err.name === 'CastError') {
     const simplifiedError = handleValidationError(err);
     statusCode = simplifiedError.statusCode;
     message = simplifiedError.message;
