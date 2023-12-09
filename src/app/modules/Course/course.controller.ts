@@ -16,8 +16,8 @@ const createCourse: RequestHandler = catchAsync(async (req, res) => {
 });
 
 const getSingleCourse = catchAsync(async (req, res) => {
-  const { semesterId } = req.params;
-  const result = await CourseService.getSingleCourseFromDB(semesterId);
+  const { id } = req.params;
+  const result = await CourseService.getSingleCourseFromDB(id);
 
   sendResponse(res, {
     statusCode: httpStatus.OK,

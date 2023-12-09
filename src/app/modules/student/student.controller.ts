@@ -5,8 +5,8 @@ import sendResponse from '../../utils/sendResponse';
 import { StudentServices } from './student.service';
 
 const getSingleStudent = catchAsync(async (req, res) => {
-  const { semesterId } = req.params;
-  const result = await StudentServices.getSingleStudentFromDB(semesterId);
+  const { id } = req.params;
+  const result = await StudentServices.getSingleStudentFromDB(id);
 
   sendResponse(res, {
     statusCode: httpStatus.OK,
