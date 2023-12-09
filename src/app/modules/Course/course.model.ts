@@ -22,7 +22,8 @@ const courseSchema = new Schema<ICourse>({
 export const Course = model<ICourse>('Course', courseSchema);
 
 const courseFacultySchema = new Schema<ICourseFaculties>({
-  course: { type: Schema.Types.ObjectId, ref: 'Faculty' },
+  course: { type: Schema.Types.ObjectId, ref: 'Course', unique: true },
+  faculties: [{ type: Schema.Types.ObjectId, ref: 'Faculty' }],
 });
 
 export const CourseFaculty = model<ICourseFaculties>(
