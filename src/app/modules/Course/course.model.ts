@@ -12,6 +12,7 @@ const courseSchema = new Schema<ICourse>({
   code: { type: Number, required: true, trim: true },
   credits: { type: Number, required: true, trim: true },
   preRequisiteCourses: [preRequisiteCoursesSchema],
+  isDeleted: { type: Boolean, default: false },
 });
 
 export const Course = model<ICourse>('Course', courseSchema);

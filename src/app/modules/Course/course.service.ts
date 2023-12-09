@@ -40,7 +40,14 @@ const deleteCourseFromDB = async (id: string) => {
   return result;
 };
 
-const updateCourseFromDB = async (id: string, courseData: ICourse) => {};
+const updateCourseFromDB = async (id: string, courseData: ICourse) => {
+  const { preRequisiteCourses, ...remainingData } = courseData;
+  const res = await Course.findByIdAndUpdate(id, remainingData, {
+    new: true,
+    runValidators: true,
+  });
+  return res;
+};
 
 export const CourseService = {
   createCourse,

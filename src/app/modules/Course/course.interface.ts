@@ -11,4 +11,5 @@ export interface ICourse {
   code: number;
   credits: number;
   preRequisiteCourses: IPreRequisiteCourses[];
+  isDeleted?: boolean;
 }

@@ -39,7 +39,7 @@ const getAllCourses: RequestHandler = catchAsync(async (req, res) => {
 });
 
 const updateCourse = catchAsync(async (req, res) => {
-  const updateData = req.body.course;
+  const updateData = req.body;
   const { id } = req.params;
   const result = await CourseService.updateCourseFromDB(id, updateData);
 
