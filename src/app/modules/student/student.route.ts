@@ -5,10 +5,10 @@ const router = express.Router();
 
 router.get('/', StudentControllers.getAllStudents);
 
-router.get('/:studentId', StudentControllers.getSingleStudent);
+router.get('/:id', StudentControllers.getSingleStudent);
 
-router.patch('/:studentId', StudentControllers.deleteStudent);
+router.patch('/:id', StudentControllers.deleteStudent);
 
-router.patch('/:studentId', StudentControllers.updateStudent);
+router.patch('/:id', StudentControllers.updateStudent);
 
 export const StudentRoutes = router;

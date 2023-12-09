@@ -52,8 +52,8 @@ const deleteStudentFromDB = async (id: string) => {
   const session = await mongoose.startSession();
 
   try {
-    const deletedStudent = await Student.findOneAndUpdate(
-      { id },
+    const deletedStudent = await Student.findByIdAndUpdate(
+      id,
       { isDeleted: true },
       { new: true, session },
     );
@@ -61,8 +61,8 @@ const deleteStudentFromDB = async (id: string) => {
     if (!deletedStudent)
       throw new AppError(httpStatus.BAD_REQUEST, 'Failed to delete student!');
 
-    const deletedUser = await User.findOneAndUpdate(
-      { id },
+    const deletedUser = await User.findByIdAndUpdate(
+      id,
       { isDeleted: true },
       { new: true, session },
     );
