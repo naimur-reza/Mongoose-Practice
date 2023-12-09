@@ -42,7 +42,7 @@ const deleteCourseFromDB = async (id: string) => {
 
 const updateCourseFromDB = async (id: string, courseData: ICourse) => {
   const { preRequisiteCourses, ...remainingData } = courseData;
-  const res = await Course.findByIdAndUpdate(id, remainingData, {
+  await Course.findByIdAndUpdate(id, remainingData, {
     new: true,
     runValidators: true,
   });
@@ -61,9 +61,23 @@ const updateCourseFromDB = async (id: string, courseData: ICourse) => {
         },
       },
     });
+
+    const addPreRequisitesCourse = preRequisiteCourses.filter(
+      (el) => el.course && !el.isDeleted,
+    );
+
+    await Course.findByIdAndUpdate(id, {
+      $addToSet: {
+        preRequisiteCourses: {
+          $each: addPreRequisitesCourse,
+        },
+      },
+    });
   }
 
-  return res;
+  const result = Course.findById(id).populate('preRequisiteCourses.course');
+
+  return result;
 };
 
 export const CourseService = {
