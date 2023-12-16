@@ -20,4 +20,9 @@ router.get(
   SemesterRegistrationControllers.getSingleSemesterRegistrationIntoDB,
 );
 
+router.patch(
+  '/:id',
+  SemesterRegistrationControllers.updateSemesterRegistrationIntoDB,
+);
+
 export const SemesterRegistrationRouter = router;

@@ -65,7 +65,38 @@ const updateSemesterRegistrationIntoDB = async (
   id: string,
   payload: ISemesterRegistration,
 ) => {
-  const result = await SemesterRegistration.findByIdAndUpdate(id, payload);
+  const requestedStatus = payload.status;
+
+  const isExistTheSemester = await SemesterRegistration.findById(id);
+
+  if (!isExistTheSemester) throw new AppError(404, 'Semester is not exist');
+
+  // check if the semester status ended or not
+
+  const currentSemesterStatus = isExistTheSemester.status;
+
+  if (currentSemesterStatus === 'ENDED')
+    throw new AppError(500, `Can not update ${currentSemesterStatus} semester`);
+
+  //  ONGOING -> UPCOMING -> ENDED
+
+  if (currentSemesterStatus === 'ONGOING' && requestedStatus === 'UPCOMING')
+    throw new AppError(
+      400,
+      `You can not change the status from ${currentSemesterStatus} to ${requestedStatus}`,
+    );
+
+  if (currentSemesterStatus === 'UPCOMING' && requestedStatus === 'ENDED')
+    throw new AppError(
+      400,
+      `You can not change the status from ${currentSemesterStatus} to ${requestedStatus}`,
+    );
+
+  const result = await SemesterRegistration.findByIdAndUpdate(id, payload, {
+    new: true,
+    runValidators: true,
+  });
+
   return result;
 };
 
