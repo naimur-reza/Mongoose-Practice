@@ -7,6 +7,18 @@ import { SemesterRegistration } from './semesterRegistration.model';
 const createSemesterRegistrationIntoDB = async (
   payload: ISemesterRegistration,
 ) => {
+  // check if there any upcoming or ongoing semester
+
+  const isExistUpcomingOrOngoingSemester = await SemesterRegistration.findOne({
+    $or: [{ status: 'ONGOING' }, { status: 'UPCOMING' }],
+  });
+
+  if (isExistUpcomingOrOngoingSemester)
+    throw new AppError(
+      500,
+      `There is already an ${isExistUpcomingOrOngoingSemester.status} semester`,
+    );
+
   const academicSemester = payload.academicSemester;
 
   // check if the academicSemester exist
