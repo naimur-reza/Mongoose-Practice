@@ -1,6 +1,9 @@
 import { Router } from 'express';
 import { SemesterRegistrationControllers } from './semesterRegistration.controller';
-import { createSemesterRegistrationValidationSchema } from './semesterRegistration.validation';
+import {
+  createSemesterRegistrationValidationSchema,
+  updateSemesterRegistrationValidationSchema,
+} from './semesterRegistration.validation';
 import validateRequest from '../../middlewares/validateRequest';
 
 const router = Router();
@@ -22,7 +25,13 @@ router.get(
 
 router.patch(
   '/:id',
+  validateRequest(updateSemesterRegistrationValidationSchema),
   SemesterRegistrationControllers.updateSemesterRegistrationIntoDB,
+);
+
+router.delete(
+  '/:id',
+  SemesterRegistrationControllers.deleteSemesterRegistrationFromDB,
 );
 
 export const SemesterRegistrationRouter = router;

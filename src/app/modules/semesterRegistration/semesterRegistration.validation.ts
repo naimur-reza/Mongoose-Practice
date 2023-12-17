@@ -11,3 +11,6 @@ export const createSemesterRegistrationValidationSchema = z.object({
     maxCredit: z.number(),
   }),
 });
+
+export const updateSemesterRegistrationValidationSchema =
+  createSemesterRegistrationValidationSchema.partial();
