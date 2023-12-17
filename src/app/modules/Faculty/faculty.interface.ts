@@ -1,4 +1,3 @@
-/* eslint-disable no-unused-vars */
 import { Model, Types } from 'mongoose';
 
 export type TGender = 'male' | 'female' | 'other';
@@ -18,7 +17,7 @@ export type TUserName = {
   lastName: string;
 };
 
-export type TAdmin = {
+export type TFaculty = {
   id: string;
   user: Types.ObjectId;
   designation: string;
@@ -32,9 +31,10 @@ export type TAdmin = {
   presentAddress: string;
   permanentAddress: string;
   profileImg?: string;
+  academicDepartment: Types.ObjectId;
   isDeleted: boolean;
 };
 
-export interface AdminModel extends Model<TAdmin> {
-  isUserExists(id: string): Promise<TAdmin | null>;
+export interface FacultyModel extends Model<TFaculty> {
+  isUserExists(id: string): Promise<TFaculty | null>;
 }
