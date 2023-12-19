@@ -43,21 +43,25 @@ const loginUser = async (payload: TLoginUser) => {
     role: user.role,
   };
 
-  const accessToken = createToken(
-    jwtPayload,
-    config.jwt_access_secret as string,
-    config.jwt_access_expires_in as string,
-  );
+  // const accessToken = createToken(
+  //   jwtPayload,
+  //   config.jwt_access_secret as string,
+  //   ,
+  // );
 
-  const refreshToken = createToken(
-    jwtPayload,
-    config.jwt_refresh_secret as string,
-    config.jwt_refresh_expires_in as string,
-  );
+  const accessToken = jwt.sign(jwtPayload, config.jwt_access_secret!, {
+    expiresIn: '1m',
+  });
+
+  // const refreshToken = createToken(
+  //   jwtPayload,
+  //   config.jwt_refresh_secret as string,
+  //   config.jwt_refresh_expires_in as string,
+  // );
 
   return {
     accessToken,
-    refreshToken,
+    // refreshToken,
     needsPasswordChange: user?.needsPasswordChange,
   };
 };
