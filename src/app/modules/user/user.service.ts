@@ -135,11 +135,7 @@ const createFacultyIntoDB = async (password: string, payload: TFaculty) => {
   }
 };
 
-const createAdminIntoDB = async (
-  file: any,
-  password: string,
-  payload: TAdmin,
-) => {
+const createAdminIntoDB = async (password: string, payload: TAdmin) => {
   // create a user object
   const userData: Partial<TUser> = {};
 
@@ -150,6 +146,7 @@ const createAdminIntoDB = async (
   userData.role = 'admin';
   //set admin email
   userData.email = payload.email;
+
   const session = await mongoose.startSession();
 
   try {
