@@ -8,12 +8,13 @@ import { createStudentValidationSchema } from './../student/student.validation';
 import { UserControllers } from './user.controller';
 import { AcademicFacultyValidation } from '../academicFaculty/academicFaculty.validation';
 import auth from '../../middlewares/auth';
+import { USER_ROLE } from './user.constant';
 
 const router = express.Router();
 
 router.post(
   '/create-student',
-  auth(),
+  auth(USER_ROLE.admin),
   validateRequest(createStudentValidationSchema),
   UserControllers.createStudent,
 );
