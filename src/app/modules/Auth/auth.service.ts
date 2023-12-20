@@ -1,6 +1,6 @@
 import bcrypt from 'bcrypt';
 import httpStatus from 'http-status';
-import jwt, { JwtPayload } from 'jsonwebtoken';
+import { JwtPayload } from 'jsonwebtoken';
 import config from '../../config';
 // import { sendEmail } from '../../utils/sendEmail';
 import { User } from '../user/user.model';
@@ -12,10 +12,6 @@ import validateUser from '../../middlewares/validateUser';
 const loginUser = async (payload: TLoginUser) => {
   // checking if the user is exist
   const user = await User.isUserExistsByCustomId(payload.id);
-
-  console.log(user);
-  console.log(payload);
-
   // validate user
 
   await validateUser(user.id);
@@ -32,25 +28,21 @@ const loginUser = async (payload: TLoginUser) => {
     role: user.role,
   };
 
-  // const accessToken = createToken(
-  //   jwtPayload,
-  //   config.jwt_access_secret as string,
-  //   ,
-  // );
+  const accessToken = createToken(
+    jwtPayload,
+    config.jwt_access_secret as string,
+    config.jwt_access_expires_in!,
+  );
 
-  const accessToken = jwt.sign(jwtPayload, config.jwt_access_secret!, {
-    expiresIn: '5d',
-  });
-
-  // const refreshToken = createToken(
-  //   jwtPayload,
-  //   config.jwt_refresh_secret as string,
-  //   config.jwt_refresh_expires_in as string,
-  // );
+  const refreshToken = createToken(
+    jwtPayload,
+    config.jwt_refresh_secret as string,
+    config.jwt_refresh_expires_in as string,
+  );
 
   return {
     accessToken,
-    // refreshToken,
+    refreshToken,
     needsPasswordChange: user?.needsPasswordChange,
   };
 };
