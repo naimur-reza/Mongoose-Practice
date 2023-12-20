@@ -7,6 +7,7 @@ import { User } from '../user/user.model';
 import { TLoginUser } from './auth.interface';
 import { createToken, verifyToken } from './auth.utils';
 import { AppError } from '../../errors/AppError';
+import validateUser from '../../middlewares/validateUser';
 
 const loginUser = async (payload: TLoginUser) => {
   // checking if the user is exist
@@ -15,24 +16,9 @@ const loginUser = async (payload: TLoginUser) => {
   console.log(user);
   console.log(payload);
 
-  if (!user) {
-    throw new AppError(httpStatus.NOT_FOUND, 'This user is not found !');
-  }
-  // checking if the user is already deleted
+  // validate user
 
-  const isDeleted = user?.isDeleted;
-
-  if (isDeleted) {
-    throw new AppError(httpStatus.FORBIDDEN, 'This user is deleted !');
-  }
-
-  // checking if the user is blocked
-
-  const userStatus = user?.status;
-
-  if (userStatus === 'blocked') {
-    throw new AppError(httpStatus.FORBIDDEN, 'This user is blocked ! !');
-  }
+  await validateUser(user.id);
 
   //checking if the password is correct
 
@@ -76,24 +62,8 @@ const changePassword = async (
   // checking if the user is exist
   const user = await User.isUserExistsByCustomId(userData.userId);
 
-  if (!user) {
-    throw new AppError(httpStatus.NOT_FOUND, 'This user is not found !');
-  }
-  // checking if the user is already deleted
-
-  const isDeleted = user?.isDeleted;
-
-  if (isDeleted) {
-    throw new AppError(httpStatus.FORBIDDEN, 'This user is deleted !');
-  }
-
-  // checking if the user is blocked
-
-  const userStatus = user?.status;
-
-  if (userStatus === 'blocked') {
-    throw new AppError(httpStatus.FORBIDDEN, 'This user is blocked ! !');
-  }
+  // validate user
+  await validateUser(userData.userId);
 
   //checking if the password is correct
 
