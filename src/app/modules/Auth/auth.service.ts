@@ -2,7 +2,6 @@ import bcrypt from 'bcrypt';
 import httpStatus from 'http-status';
 import jwt, { JwtPayload } from 'jsonwebtoken';
 import config from '../../config';
-// import { sendEmail } from '../../utils/sendEmail';
 import { User } from '../user/user.model';
 import { TLoginUser } from './auth.interface';
 import { createToken, verifyToken } from './auth.utils';
@@ -15,7 +14,24 @@ const loginUser = async (payload: TLoginUser) => {
   const user = await User.isUserExistsByCustomId(payload.id);
   // validate user
 
-  await validateUser(user.id);
+  if (!user) {
+    throw new AppError(httpStatus.NOT_FOUND, 'This user is not found !');
+  }
+  // checking if the user is already deleted
+
+  const isDeleted = user?.isDeleted;
+
+  if (isDeleted) {
+    throw new AppError(httpStatus.FORBIDDEN, 'This user is deleted !');
+  }
+
+  // checking if the user is blocked
+
+  const userStatus = user?.status;
+
+  if (userStatus === 'blocked') {
+    throw new AppError(httpStatus.FORBIDDEN, 'This user is blocked ! !');
+  }
 
   //checking if the password is correct
 
@@ -167,7 +183,7 @@ const forgetPassword = async (userId: string) => {
 
   const resetUILink = `${config.reset_pass_ui_link}?id=${user.id}&token=${resetToken} `;
 
-  sendMail(user.email);
+  sendMail(user.email, resetUILink);
 
   console.log(resetUILink);
 };
@@ -205,7 +221,7 @@ const resetPassword = async (
 
   if (payload.id !== decoded.userId) {
     console.log(payload.id, decoded.userId);
-    throw new AppError(httpStatus.FORBIDDEN, 'You are forbidden!');
+    throw new AppError(httpStatus.FORBIDDEN, 'Forbidden access!');
   }
 
   //hash new password
