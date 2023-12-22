@@ -1,6 +1,6 @@
 import bcrypt from 'bcrypt';
 import httpStatus from 'http-status';
-import { JwtPayload } from 'jsonwebtoken';
+import jwt, { JwtPayload } from 'jsonwebtoken';
 import config from '../../config';
 // import { sendEmail } from '../../utils/sendEmail';
 import { User } from '../user/user.model';
@@ -8,6 +8,7 @@ import { TLoginUser } from './auth.interface';
 import { createToken, verifyToken } from './auth.utils';
 import { AppError } from '../../errors/AppError';
 import validateUser from '../../middlewares/validateUser';
+import sendMail from '../../utils/sendMail';
 
 const loginUser = async (payload: TLoginUser) => {
   // checking if the user is exist
@@ -166,7 +167,7 @@ const forgetPassword = async (userId: string) => {
 
   const resetUILink = `${config.reset_pass_ui_link}?id=${user.id}&token=${resetToken} `;
 
-  sendEmail(user.email, resetUILink);
+  sendMail(user.email);
 
   console.log(resetUILink);
 };

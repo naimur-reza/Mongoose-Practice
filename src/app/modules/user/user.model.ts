@@ -2,8 +2,8 @@
 import bcrypt from 'bcrypt';
 import { Schema, model } from 'mongoose';
 import config from '../../config';
-import { UserStatus } from './user.constant';
 import { TUser, UserModel } from './user.interface';
+import { UserStatus } from './user.constant';
 const userSchema = new Schema<TUser, UserModel>(
   {
     id: {
