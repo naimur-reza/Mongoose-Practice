@@ -5,8 +5,13 @@ import { UserServices } from './user.service';
 
 const createStudent = catchAsync(async (req, res) => {
   const { password, student: studentData } = req.body;
+  const file = req.file;
 
-  const result = await UserServices.createStudentIntoDB(password, studentData);
+  const result = await UserServices.createStudentIntoDB(
+    file,
+    password,
+    studentData,
+  );
 
   sendResponse(res, {
     statusCode: httpStatus.OK,
@@ -42,8 +47,6 @@ const createAdmin = catchAsync(async (req, res) => {
   });
 });
 const getMe = catchAsync(async (req, res) => {
-  // const { password, admin: adminData } = req.body;
-
   const result = await UserServices.getMe(req.user);
 
   sendResponse(res, {
