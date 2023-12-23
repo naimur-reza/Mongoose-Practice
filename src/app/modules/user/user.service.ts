@@ -18,6 +18,8 @@ import {
   generateStudentId,
 } from './user.utils';
 import { AppError } from '../../errors/AppError';
+import { verifyToken } from '../Auth/auth.utils';
+import { JwtPayload } from 'jsonwebtoken';
 
 const createStudentIntoDB = async (password: string, payload: TStudent) => {
   // create a user object
@@ -183,23 +185,23 @@ const createAdminIntoDB = async (password: string, payload: TAdmin) => {
   }
 };
 
-const getMe = async (userId: string, role: string) => {
-  // const decoded = verifyToken(token, config.jwt_access_secret as string);
-  // const { userId, role } = decoded;
-
-  let result = null;
+const getMe = async (token: string) => {
+  const decoded = verifyToken(token, config.jwt_access_secret as string);
+  const { userId, role } = decoded as JwtPayload;
+  let user;
   if (role === 'student') {
-    result = await Student.findOne({ id: userId }).populate('user');
-  }
-  if (role === 'admin') {
-    result = await Admin.findOne({ id: userId }).populate('user');
-  }
-
-  if (role === 'faculty') {
-    result = await Faculty.findOne({ id: userId }).populate('user');
+    user = await Student.findOne({ id: userId });
+  } else if (role === 'faculty') {
+    user = await Faculty.findOne({ id: userId });
+  } else if (role === 'admin') {
+    user = await Admin.findOne({ id: userId });
   }
 
-  return result;
+  if (!user) {
+    throw new AppError(400, 'User not found');
+  }
+
+  return user;
 };
 
 const changeStatus = async (id: string, payload: { status: string }) => {
