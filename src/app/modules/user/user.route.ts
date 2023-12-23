@@ -1,5 +1,4 @@
-import express, { NextFunction, Request, Response } from 'express';
-
+import express from 'express';
 import validateRequest from '../../middlewares/validateRequest';
 import { createAdminValidationSchema } from '../Admin/admin.validation';
 
@@ -11,6 +10,7 @@ import auth from '../../middlewares/auth';
 import { USER_ROLE } from './user.constant';
 import { UserValidation } from './user.validation';
 import { upload } from '../../utils/sendImageToCloudinary';
+import { parseFile } from '../../utils/fileParser';
 
 const router = express.Router();
 
@@ -18,10 +18,7 @@ router.post(
   '/create-student',
   auth(USER_ROLE.admin),
   upload.single('file'),
-  (req: Request, res: Response, next: NextFunction) => {
-    req.body = JSON.parse(req.body.data);
-    next();
-  },
+  parseFile,
   validateRequest(createStudentValidationSchema),
   UserControllers.createStudent,
 );
@@ -29,6 +26,8 @@ router.post(
 router.post(
   '/create-faculty',
   auth(USER_ROLE.admin),
+  upload.single('file'),
+  parseFile,
   validateRequest(
     AcademicFacultyValidation.createAcademicFacultyValidationSchema,
   ),
@@ -38,6 +37,8 @@ router.post(
 router.post(
   '/create-admin',
   // auth(USER_ROLE.admin),
+  upload.single('file'),
+  parseFile,
   validateRequest(createAdminValidationSchema),
   UserControllers.createAdmin,
 );

@@ -29,8 +29,6 @@ export const sendImageToCloudinary = async (
         });
       },
     );
-
-    //   delete a file asynchrously
   });
 };
 
