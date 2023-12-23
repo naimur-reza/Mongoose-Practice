@@ -44,9 +44,7 @@ const createAdmin = catchAsync(async (req, res) => {
 const getMe = catchAsync(async (req, res) => {
   // const { password, admin: adminData } = req.body;
 
-  const token = req.headers.authorization as string;
-
-  const result = await UserServices.getMe(token);
+  const result = await UserServices.getMe(req.user);
 
   sendResponse(res, {
     statusCode: httpStatus.OK,
@@ -56,9 +54,24 @@ const getMe = catchAsync(async (req, res) => {
   });
 });
 
+const changeStatus = catchAsync(async (req, res) => {
+  const status = req.body;
+  console.log(status);
+
+  const result = await UserServices.changeStatus(req.params.id, status);
+
+  sendResponse(res, {
+    statusCode: httpStatus.OK,
+    success: true,
+    message: 'User status is changed successfully',
+    data: result,
+  });
+});
+
 export const UserControllers = {
   createStudent,
   createFaculty,
   createAdmin,
   getMe,
+  changeStatus,
 };

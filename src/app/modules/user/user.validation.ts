@@ -9,6 +9,13 @@ const userValidationSchema = z.object({
     .optional(),
 });
 
+const statusValidation = z.object({
+  body: z.object({
+    status: z.enum(['in-progress', 'blocked']),
+  }),
+});
+
 export const UserValidation = {
   userValidationSchema,
+  statusValidation,
 };

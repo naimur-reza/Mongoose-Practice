@@ -9,6 +9,7 @@ import { UserControllers } from './user.controller';
 import { AcademicFacultyValidation } from '../academicFaculty/academicFaculty.validation';
 import auth from '../../middlewares/auth';
 import { USER_ROLE } from './user.constant';
+import { UserValidation } from './user.validation';
 
 const router = express.Router();
 
@@ -36,5 +37,12 @@ router.post(
 );
 
 router.get('/me', auth('admin', 'faculty', 'student'), UserControllers.getMe);
+
+router.patch(
+  '/change-status/:id',
+  auth(USER_ROLE.admin),
+  validateRequest(UserValidation.statusValidation),
+  UserControllers.changeStatus,
+);
 
 export const UserRoutes = router;

@@ -18,7 +18,6 @@ import {
   generateStudentId,
 } from './user.utils';
 import { AppError } from '../../errors/AppError';
-import { verifyToken } from '../Auth/auth.utils';
 import { JwtPayload } from 'jsonwebtoken';
 
 const createStudentIntoDB = async (password: string, payload: TStudent) => {
@@ -185,9 +184,8 @@ const createAdminIntoDB = async (password: string, payload: TAdmin) => {
   }
 };
 
-const getMe = async (token: string) => {
-  const decoded = verifyToken(token, config.jwt_access_secret as string);
-  const { userId, role } = decoded as JwtPayload;
+const getMe = async (payload: JwtPayload) => {
+  const { userId, role } = payload;
   let user;
   if (role === 'student') {
     user = await Student.findOne({ id: userId });
@@ -204,8 +202,8 @@ const getMe = async (token: string) => {
   return user;
 };
 
-const changeStatus = async (id: string, payload: { status: string }) => {
-  const result = await User.findByIdAndUpdate(id, payload, {
+const changeStatus = async (id: string, status: { status: string }) => {
+  const result = await User.findByIdAndUpdate(id, status, {
     new: true,
   });
   return result;
