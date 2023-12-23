@@ -32,6 +32,7 @@ export const sendImageToCloudinary = async (
   });
 };
 
+// this is the path to save the file
 const storage = multer.diskStorage({
   destination: function (req, file, cb) {
     cb(null, process.cwd() + '/uploads/'); //  <---  here is the path to save the file;
