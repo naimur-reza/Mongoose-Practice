@@ -21,7 +21,8 @@ const getAllCoursesFromDB = async (query: Record<string, unknown>) => {
     .paginate()
     .sort();
   const result = await courseQuery.modelQuery;
-  return result;
+  const meta = await courseQuery.countTotal();
+  return { meta, result };
 };
 
 const getSingleCourseFromDB = async (id: string) => {
@@ -46,7 +47,7 @@ const deleteCourseFromDB = async (id: string) => {
 const updateCourseFromDB = async (id: string, courseData: Partial<ICourse>) => {
   const session = await mongoose.startSession();
 
-  await session.startTransaction();
+  session.startTransaction();
   try {
     const { preRequisiteCourses, ...remainingData } = courseData;
     await Course.findByIdAndUpdate(id, remainingData, {

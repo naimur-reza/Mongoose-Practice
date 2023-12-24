@@ -216,7 +216,6 @@ const updateEnrolledCourseMarksIntoDB = async (
       modifiedData[`courseMarks.${key}`] = value;
     }
   }
-  console.log(modifiedData);
 
   const enrolledCourse = await EnrolledCourse.findOneAndUpdate(
     {
