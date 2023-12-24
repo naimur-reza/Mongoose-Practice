@@ -9,6 +9,7 @@ import { Course } from '../Course/course.model';
 import { Faculty } from '../Faculty/faculty.model';
 import { TEnrolledCourse } from './enrolledCourse.interface';
 import { Student } from '../student/student.model';
+import { calculateGradeAndPoints } from './enrolledCourse.utils';
 
 const createEnrolledCourseIntoDB = async (
   userId: string,
@@ -191,24 +192,31 @@ const updateEnrolledCourseMarksIntoDB = async (
     throw new AppError(400, 'Course does not belong to the faculty');
 
   //  update logics here
-  // const courseMarks = {
-  //   classTest1: data.courseMarks?.classTest1,
-  //   midTerm: data.courseMarks?.midTerm,
-  //   classTest2: data.courseMarks?.classTest2,
-  //   finalTerm: data.courseMarks?.finalTerm,
-  // };
 
-  const modifiedCourseMarks: Record<string, unknown> = {
+  const modifiedData: Record<string, unknown> = {
     ...courseMarks,
   };
 
-  if (courseMarks && Object.keys(courseMarks).length > 0) {
-    for (const [key, value] of Object.entries(courseMarks)) {
-      modifiedCourseMarks[`courseMarks.${key}`] = value;
-    }
+  if (courseMarks?.finalTerm) {
+    const totalMarks = Math.ceil(
+      courseMarks.classTest1 * 0.1 +
+        courseMarks.classTest2 * 0.1 +
+        courseMarks.midTerm * 0.3 +
+        courseMarks.finalTerm * 0.5,
+    );
+
+    const gradeAndPoints = calculateGradeAndPoints(totalMarks);
+    modifiedData.grade = gradeAndPoints.grade;
+    modifiedData.gradePoints = gradeAndPoints.gradePoints;
+    modifiedData.isCompleted = true;
   }
 
-  console.log(modifiedCourseMarks);
+  if (courseMarks && Object.keys(courseMarks).length > 0) {
+    for (const [key, value] of Object.entries(courseMarks)) {
+      modifiedData[`courseMarks.${key}`] = value;
+    }
+  }
+  console.log(modifiedData);
 
   const enrolledCourse = await EnrolledCourse.findOneAndUpdate(
     {
@@ -216,9 +224,8 @@ const updateEnrolledCourseMarksIntoDB = async (
       semesterRegistration,
       offeredCourse,
     },
-    {
-      modifiedCourseMarks,
-    },
+
+    modifiedData,
     {
       new: true,
     },
