@@ -5,6 +5,7 @@ import { OfferedCourse } from '../offeredCourse/offeredCourse.model';
 import { User } from '../user/user.model';
 import EnrolledCourse from './enrolledCourse.model';
 import { SemesterRegistration } from '../semesterRegistration/semesterRegistration.model';
+import { Course } from '../Course/course.model';
 
 const createEnrolledCourseIntoDB = async (
   userId: string,
@@ -25,6 +26,13 @@ const createEnrolledCourseIntoDB = async (
   if (!offeredCourse) {
     throw new AppError(404, 'Offered course does not exist');
   }
+
+  const course = await Course.findById(offeredCourse.course);
+
+  if (!course) {
+    throw new AppError(404, 'Course does not exist');
+  }
+
   const semesterRegistration = await SemesterRegistration.findOne({
     academicSemester: offeredCourse.academicSemester,
   }).select('maxCredit');
@@ -32,6 +40,8 @@ const createEnrolledCourseIntoDB = async (
   if (!semesterRegistration) {
     throw new AppError(404, 'Semester registration does not exist');
   }
+
+  // find out the total credits of the enrolled courses of the student
 
   const enrolledCourses = await EnrolledCourse.aggregate([
     {
@@ -64,10 +74,16 @@ const createEnrolledCourseIntoDB = async (
     },
   ]);
 
-  //
   const totalCredits =
     enrolledCourses.length > 0 ? enrolledCourses[0].totalEnrolledCredits : 0;
-  console.log(totalCredits);
+
+  // check if the user has exceeded the maximum credit limit
+
+  if (
+    totalCredits &&
+    totalCredits + course.credits > semesterRegistration.maxCredit
+  )
+    throw new AppError(400, 'You have exceeded the maximum credit limit');
 
   if (offeredCourse.maxCapacity <= 0)
     throw new AppError(400, 'Course is already full');
@@ -85,59 +101,59 @@ const createEnrolledCourseIntoDB = async (
 
   // check if the user is already enrolled in the course
 
-  // const isStudentAlreadyEnrolled = await EnrolledCourse.findOne({
-  //   semesterRegistration: offeredCourse.semesterRegistration,
-  //   offeredCourse: payload.offeredCourse,
-  //   student: user._id,
-  // });
+  const isStudentAlreadyEnrolled = await EnrolledCourse.findOne({
+    semesterRegistration: offeredCourse.semesterRegistration,
+    offeredCourse: payload.offeredCourse,
+    student: user._id,
+  });
 
-  // if (isStudentAlreadyEnrolled) {
-  //   throw new AppError(400, 'You are already enrolled in this course');
-  // }
+  if (isStudentAlreadyEnrolled) {
+    throw new AppError(400, 'You are already enrolled in this course');
+  }
 
-  // const session = await mongoose.startSession();
+  const session = await mongoose.startSession();
 
-  // try {
-  //   session.startTransaction();
+  try {
+    session.startTransaction();
 
-  //   const {
-  //     semesterRegistration,
-  //     academicSemester,
-  //     academicFaculty,
-  //     academicDepartment,
-  //     course,
-  //     faculty,
-  //   } = offeredCourse;
+    const {
+      semesterRegistration,
+      academicSemester,
+      academicFaculty,
+      academicDepartment,
+      course,
+      faculty,
+    } = offeredCourse;
 
-  //   const enrolledCourse = await EnrolledCourse.create(
-  //     [
-  //       {
-  //         semesterRegistration,
-  //         academicSemester,
-  //         academicFaculty,
-  //         academicDepartment,
-  //         offeredCourse,
-  //         course,
-  //         student: user._id,
-  //         faculty,
-  //       },
-  //     ],
-  //     { session },
-  //   );
+    const enrolledCourse = await EnrolledCourse.create(
+      [
+        {
+          semesterRegistration,
+          academicSemester,
+          academicFaculty,
+          academicDepartment,
+          offeredCourse,
+          course,
+          student: user._id,
+          faculty,
+        },
+      ],
+      { session },
+    );
 
-  //   const maxCapacity = offeredCourse.maxCapacity - 1;
+    const maxCapacity = offeredCourse.maxCapacity - 1;
 
-  //   await OfferedCourse.findByIdAndUpdate(id, { maxCapacity }, { session });
+    await OfferedCourse.findByIdAndUpdate(id, { maxCapacity }, { session });
 
-  //   await session.commitTransaction();
-  //   await session.endSession();
+    await session.commitTransaction();
+    await session.endSession();
 
-  //   return enrolledCourse;
-  // } catch (error: any) {
-  //   await session.abortTransaction();
-  //   await session.endSession();
-  //   throw new Error(error);
-  // }
+    return enrolledCourse;
+  } catch (error: any) {
+    await session.abortTransaction();
+    await session.endSession();
+    throw new Error(error);
+  }
 };
 
 const updateEnrolledCourseMarksIntoDB = async (facultyId, data) => {};
