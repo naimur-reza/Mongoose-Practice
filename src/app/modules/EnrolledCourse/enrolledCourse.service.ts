@@ -6,6 +6,9 @@ import { User } from '../user/user.model';
 import EnrolledCourse from './enrolledCourse.model';
 import { SemesterRegistration } from '../semesterRegistration/semesterRegistration.model';
 import { Course } from '../Course/course.model';
+import { Faculty } from '../Faculty/faculty.model';
+import { TEnrolledCourse } from './enrolledCourse.interface';
+import { Student } from '../student/student.model';
 
 const createEnrolledCourseIntoDB = async (
   userId: string,
@@ -156,7 +159,76 @@ const createEnrolledCourseIntoDB = async (
   }
 };
 
-const updateEnrolledCourseMarksIntoDB = async (facultyId, data) => {};
+const updateEnrolledCourseMarksIntoDB = async (
+  facultyId: string,
+  data: Partial<TEnrolledCourse>,
+) => {
+  // validations here
+  const faculty = await Faculty.findOne({ id: facultyId });
+  if (!faculty) throw new AppError(404, 'Faculty does not exist');
+
+  const { student, semesterRegistration, offeredCourse, courseMarks } = data;
+
+  const studentInfo = await Student.findById(student);
+  if (!studentInfo) throw new AppError(404, 'Student does not exist');
+
+  const semesterRegistrationInfo =
+    await SemesterRegistration.findById(semesterRegistration);
+  if (!semesterRegistrationInfo)
+    throw new AppError(404, 'Semester registration does not exist');
+
+  const offeredCourseInfo = await OfferedCourse.findById(offeredCourse);
+  if (!offeredCourseInfo)
+    throw new AppError(404, 'Offered course does not exist');
+  console.log(data);
+
+  const isCourseBelongsToFaculty = await EnrolledCourse.findOne({
+    semesterRegistration,
+    offeredCourse,
+    faculty: faculty._id,
+  });
+  if (!isCourseBelongsToFaculty)
+    throw new AppError(400, 'Course does not belong to the faculty');
+
+  //  update logics here
+  // const courseMarks = {
+  //   classTest1: data.courseMarks?.classTest1,
+  //   midTerm: data.courseMarks?.midTerm,
+  //   classTest2: data.courseMarks?.classTest2,
+  //   finalTerm: data.courseMarks?.finalTerm,
+  // };
+
+  const modifiedCourseMarks: Record<string, unknown> = {
+    ...courseMarks,
+  };
+
+  if (courseMarks && Object.keys(courseMarks).length > 0) {
+    for (const [key, value] of Object.entries(courseMarks)) {
+      modifiedCourseMarks[`courseMarks.${key}`] = value;
+    }
+  }
+
+  console.log(modifiedCourseMarks);
+
+  const enrolledCourse = await EnrolledCourse.findOneAndUpdate(
+    {
+      student,
+      semesterRegistration,
+      offeredCourse,
+    },
+    {
+      modifiedCourseMarks,
+    },
+    {
+      new: true,
+    },
+  );
+
+  if (!enrolledCourse)
+    throw new AppError(404, 'Enrolled course does not exist');
+
+  return enrolledCourse;
+};
 
 export const EnrolledCourseServices = {
   createEnrolledCourseIntoDB,
