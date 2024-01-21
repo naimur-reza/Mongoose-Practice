@@ -11,6 +11,8 @@ import handleValidationError from '../errors/handleValidationError';
 import handleCastError from '../errors/handleCastError';
 import handleDuplicateError from '../errors/handleDuplicateError';
 import { AppError } from '../errors/AppError';
+import { JsonWebTokenError } from 'jsonwebtoken';
+import handleJwtError from '../errors/handleJwtError';
 
 interface GlobalErrorHandler {
   success: boolean;
@@ -52,6 +54,11 @@ const globalErrorHandler = (
     errorSources = simplifiedError.errorSources;
   } else if (err.code === 11000) {
     const simplifiedError = handleDuplicateError(err);
+    statusCode = simplifiedError.statusCode;
+    message = simplifiedError.message;
+    errorSources = simplifiedError.errorSources;
+  } else if (err instanceof JsonWebTokenError) {
+    const simplifiedError = handleJwtError();
     statusCode = simplifiedError.statusCode;
     message = simplifiedError.message;
     errorSources = simplifiedError.errorSources;

@@ -2,14 +2,15 @@ import express from 'express';
 import validateRequest from '../../middlewares/validateRequest';
 import { AcademicSemesterControllers } from './academicSemester.controller';
 import { AcademicSemesterValidations } from './academicSemester.validation';
+import auth from '../../middlewares/auth';
 
 const router = express.Router();
 
 router.post(
   '/create-academic-semester',
-  // validateRequest(
-  //   AcademicSemesterValidations.createacademicSemesterValidationSchema,
-  // ),
+  validateRequest(
+    AcademicSemesterValidations.createacademicSemesterValidationSchema,
+  ),
   AcademicSemesterControllers.createAcademicSemester,
 );
 
@@ -25,6 +26,10 @@ router.patch(
   AcademicSemesterControllers.updateAcademicSemester,
 );
 
-router.get('/', AcademicSemesterControllers.getAllAcademicSemesters);
+router.get(
+  '/',
+  auth('admin'),
+  AcademicSemesterControllers.getAllAcademicSemesters,
+);
 
 export const AcademicSemesterRoutes = router;
