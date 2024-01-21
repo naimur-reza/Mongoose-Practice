@@ -5,6 +5,7 @@ import { AuthControllers } from './auth.controller';
 import { AuthValidation } from './auth.validation';
 import { USER_ROLE } from '../user/user.constant';
 import auth from '../../middlewares/auth';
+import validateCookie from '../../middlewares/validateCookieRequest';
 
 const router = express.Router();
 
@@ -23,7 +24,7 @@ router.post(
 
 router.post(
   '/refresh-token',
-  validateRequest(AuthValidation.refreshTokenValidationSchema),
+  validateCookie(AuthValidation.refreshTokenValidationSchema),
   AuthControllers.refreshToken,
 );
 
