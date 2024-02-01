@@ -25,7 +25,7 @@ router.post(
 
 router.post(
   '/create-faculty',
-  auth(USER_ROLE.admin),
+  auth(USER_ROLE.admin, USER_ROLE.superAdmin),
   upload.single('file'),
   parseFile,
   validateRequest(
@@ -36,14 +36,23 @@ router.post(
 
 router.post(
   '/create-admin',
-  // auth(USER_ROLE.admin),
+  auth(USER_ROLE.superAdmin, USER_ROLE.admin),
   upload.single('file'),
   parseFile,
   validateRequest(createAdminValidationSchema),
   UserControllers.createAdmin,
 );
 
-router.get('/me', auth('admin', 'faculty', 'student'), UserControllers.getMe);
+router.get(
+  '/me',
+  auth(
+    USER_ROLE.admin,
+    USER_ROLE.superAdmin,
+    USER_ROLE.student,
+    USER_ROLE.faculty,
+  ),
+  UserControllers.getMe,
+);
 
 router.patch(
   '/change-status/:id',

@@ -75,17 +75,19 @@ const createStudentIntoDB = async (
 
     // upload image to cloudinary
 
-    const path = file.path;
-    const imageName = newUser[0].id + '.jpg';
+    if (file) {
+      const path = file.path;
+      const imageName = newUser[0].id + '.jpg';
 
-    const { secure_url } = (await sendImageToCloudinary(imageName, path)) as {
-      secure_url: string;
-    };
+      const { secure_url } = (await sendImageToCloudinary(imageName, path)) as {
+        secure_url: string;
+      };
+      payload.profileImg = secure_url;
+    }
 
     // set id , _id as user
     payload.id = newUser[0].id;
     payload.user = newUser[0]._id; //reference _id
-    payload.profileImg = secure_url;
 
     // create a student (transaction-2)
 
@@ -148,17 +150,19 @@ const createFacultyIntoDB = async (
 
     // upload image to cloudinary
 
-    const path = file.path;
-    const imageName = newUser[0].id + '.jpg';
+    if (file) {
+      const path = file.path;
+      const imageName = newUser[0].id + '.jpg';
 
-    const { secure_url } = (await sendImageToCloudinary(imageName, path)) as {
-      secure_url: string;
-    };
+      const { secure_url } = (await sendImageToCloudinary(imageName, path)) as {
+        secure_url: string;
+      };
+      payload.profileImg = secure_url;
+    }
 
     // set id , _id as user
     payload.id = newUser[0].id;
     payload.user = newUser[0]._id; //reference _id
-    payload.profileImg = secure_url;
 
     // create a faculty (transaction-2)
 
@@ -212,17 +216,19 @@ const createAdminIntoDB = async (
 
     // upload image to cloudinary
 
-    const path = file.path;
-    const imageName = newUser[0].id + '.jpg';
+    if (file) {
+      const path = file.path;
+      const imageName = newUser[0].id + '.jpg';
 
-    const { secure_url } = (await sendImageToCloudinary(imageName, path)) as {
-      secure_url: string;
-    };
+      const { secure_url } = (await sendImageToCloudinary(imageName, path)) as {
+        secure_url: string;
+      };
+      payload.profileImg = secure_url;
+    }
 
     // set id , _id as user
     payload.id = newUser[0].id;
     payload.user = newUser[0]._id; //reference _id
-    payload.profileImg = secure_url;
 
     // create a admin (transaction-2)
     const newAdmin = await Admin.create([payload], { session });
