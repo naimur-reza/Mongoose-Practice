@@ -151,13 +151,8 @@ const createFacultyIntoDB = async (
     // upload image to cloudinary
 
     if (file) {
-      const path = file.path;
-      const imageName = newUser[0].id + '.jpg';
-
-      const { secure_url } = (await sendImageToCloudinary(imageName, path)) as {
-        secure_url: string;
-      };
-      payload.profileImg = secure_url;
+      // const path = file.path;
+      // const imageName = newUser[0].id + '.jpg';
     }
 
     // set id , _id as user

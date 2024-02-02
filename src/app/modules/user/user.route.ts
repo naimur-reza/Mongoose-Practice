@@ -56,7 +56,7 @@ router.get(
 
 router.patch(
   '/change-status/:id',
-  auth(USER_ROLE.admin),
+  auth(USER_ROLE.admin, USER_ROLE.superAdmin),
   validateRequest(UserValidation.statusValidation),
   UserControllers.changeStatus,
 );

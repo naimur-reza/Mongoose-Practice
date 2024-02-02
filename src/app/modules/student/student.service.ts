@@ -6,14 +6,8 @@ import { TStudent } from './student.interface';
 import { updateStudentValidationSchema } from './student.validation';
 import { User } from '../user/user.model';
 import QueryBuilder from '../../builder/queryBuilder';
+import { studentSearchableFields } from './studentSearchableFields';
 const getAllStudentsFromDB = async (query: Record<string, unknown>) => {
-  const studentSearchableFields = [
-    'email',
-    'name.firstName',
-    'presentAddress',
-    'gender',
-  ];
-
   const studentQuery = new QueryBuilder(
     Student.find()
       .populate('admissionSemester')
