@@ -29,9 +29,9 @@ router.get(
 router.patch(
   '/:semesterId',
   auth(USER_ROLE.superAdmin, USER_ROLE.admin),
-  validateRequest(
-    AcademicSemesterValidations.updateAcademicSemesterValidationSchema,
-  ),
+  // validateRequest(
+  //   AcademicSemesterValidations.updateAcademicSemesterValidationSchema,
+  // ),
   AcademicSemesterControllers.updateAcademicSemester,
 );
 
