@@ -101,7 +101,7 @@ const getFacultiesWithCourse = catchAsync(async (req, res) => {
   sendResponse(res, {
     statusCode: httpStatus.OK,
     success: true,
-    message: 'Faculties retrieved successfully!',
+    message: 'Faculties retrieved successfully',
     data: result,
   });
 });
