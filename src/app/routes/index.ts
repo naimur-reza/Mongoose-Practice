@@ -40,7 +40,7 @@ const moduleRoutes = [
     route: AcademicFacultyRoutes,
   },
   {
-    path: '/academic-department',
+    path: '/academic-departments',
     route: AcademicDepartmentRoutes,
   },
   {
@@ -48,11 +48,11 @@ const moduleRoutes = [
     route: CourseRoutes,
   },
   {
-    path: '/semester-registration',
+    path: '/semester-registrations',
     route: SemesterRegistrationRouter,
   },
   {
-    path: '/offered-course',
+    path: '/offered-courses',
     route: offeredCourseRoutes,
   },
   {

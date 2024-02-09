@@ -5,7 +5,11 @@ import { USER_ROLE } from '../user/user.constant';
 
 const router = express.Router();
 
-router.get('/', auth('admin'), StudentControllers.getAllStudents);
+router.get(
+  '/',
+  auth(USER_ROLE.superAdmin, USER_ROLE.admin),
+  StudentControllers.getAllStudents,
+);
 
 router.get(
   '/:id',
@@ -13,8 +17,16 @@ router.get(
   StudentControllers.getSingleStudent,
 );
 
-router.patch('/:id', auth('admin'), StudentControllers.deleteStudent);
+router.delete(
+  '/:id',
+  auth(USER_ROLE.superAdmin, USER_ROLE.admin),
+  StudentControllers.deleteStudent,
+);
 
-router.patch('/:id', StudentControllers.updateStudent);
+router.patch(
+  '/:id',
+  auth(USER_ROLE.superAdmin, USER_ROLE.admin),
+  StudentControllers.updateStudent,
+);
 
 export const StudentRoutes = router;

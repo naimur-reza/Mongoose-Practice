@@ -5,6 +5,10 @@ export const parseFile = async (
   res: Response,
   next: NextFunction,
 ) => {
-  req.body = JSON.parse(req.body.data);
-  next();
+  try {
+    req.body = JSON.parse(req.body.data);
+    next();
+  } catch (error) {
+    next(error);
+  }
 };

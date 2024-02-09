@@ -5,12 +5,13 @@ import { createAdminValidationSchema } from '../Admin/admin.validation';
 import { createStudentValidationSchema } from './../student/student.validation';
 
 import { UserControllers } from './user.controller';
-import { AcademicFacultyValidation } from '../academicFaculty/academicFaculty.validation';
+
 import auth from '../../middlewares/auth';
 import { USER_ROLE } from './user.constant';
 import { UserValidation } from './user.validation';
 import { upload } from '../../utils/sendImageToCloudinary';
 import { parseFile } from '../../utils/fileParser';
+import { facultyValidation } from '../Faculty/faculty.validation';
 
 const router = express.Router();
 
@@ -28,9 +29,7 @@ router.post(
   auth(USER_ROLE.admin, USER_ROLE.superAdmin),
   upload.single('file'),
   parseFile,
-  validateRequest(
-    AcademicFacultyValidation.createAcademicFacultyValidationSchema,
-  ),
+  validateRequest(facultyValidation.createFacultyValidationSchema),
   UserControllers.createFaculty,
 );
 
