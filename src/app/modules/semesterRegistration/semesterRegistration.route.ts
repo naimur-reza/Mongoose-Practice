@@ -1,19 +1,19 @@
 import { Router } from 'express';
 import { SemesterRegistrationControllers } from './semesterRegistration.controller';
-import {
-  createSemesterRegistrationValidationSchema,
-  updateSemesterRegistrationValidationSchema,
-} from './semesterRegistration.validation';
+
 import validateRequest from '../../middlewares/validateRequest';
 import { USER_ROLE } from '../user/user.constant';
 import auth from '../../middlewares/auth';
+import { SemesterRegistrationValidations } from './semesterRegistration.validation';
 
 const router = Router();
 
 router.post(
   '/create-semester-registration',
   auth(USER_ROLE.superAdmin, USER_ROLE.admin),
-  validateRequest(createSemesterRegistrationValidationSchema),
+  validateRequest(
+    SemesterRegistrationValidations.createSemesterRegistrationValidationSchema,
+  ),
   SemesterRegistrationControllers.createSemesterRegistrationIntoDB,
 );
 
@@ -41,7 +41,9 @@ router.get(
 router.patch(
   '/:id',
   auth(USER_ROLE.superAdmin, USER_ROLE.admin),
-  validateRequest(updateSemesterRegistrationValidationSchema),
+  validateRequest(
+    SemesterRegistrationValidations.updateSemesterRegistrationValidationSchema,
+  ),
   SemesterRegistrationControllers.updateSemesterRegistrationIntoDB,
 );
 
