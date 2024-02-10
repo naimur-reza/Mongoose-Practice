@@ -28,12 +28,13 @@ const getSingleCourse = catchAsync(async (req, res) => {
 });
 
 const getAllCourses: RequestHandler = catchAsync(async (req, res) => {
-  const result = await CourseService.getAllCoursesFromDB(req.query);
+  const {meta, result} = await CourseService.getAllCoursesFromDB(req.query);
 
   sendResponse(res, {
     statusCode: httpStatus.OK,
     success: true,
     message: 'Courses are retrieved successfully!',
+    meta: meta,
     data: result,
   });
 });
